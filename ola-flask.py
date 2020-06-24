@@ -11,13 +11,13 @@ def mostra_numero(numero):
 def rota_padrao():
     return {'nome':'lucas','profissão':'estudante'}
 
-@app.route('/soma', methods=['get','post'])
+@app.route('/soma', methods=['GET','POST'])
 def somar():
     # Também pode ser feito da seguinte forma
     # dados = request.get_json(force=True)
     # return str(sum(dados['valores']))
 
-    if request.method == 'post':
+    if request.method == 'POST':
         dados = json.loads(request.data)
         soma = sum(dados['valores'])
     else:
@@ -77,34 +77,40 @@ def tarefa():
     metodo = request.method
     try:
         if metodo == 'GET':
-            return jsonify(tarefas)
-        elif metodo == 'POST':
+            try: #se houver campo id, tenta buscá-lo. Se não for encontrado, informa que não foi encontrado
+                dados = json.loads(request.data)
+                for i in range(len(tarefas)):
+                    if dados['id'] == tarefas[i]['id']:
+                        return tarefas[i]
+                return 'id não encontrado'
+            except:
+                return jsonify(tarefas)
+        else:
             dados = json.loads(request.data)
-            for i in range(len(tarefas)):
-                if tarefas[i]['id'] != i:
-                    dados['id'] = i
-                    tarefas.insert(i,dados)
-                    return dados
-            dados['id'] = len(tarefas)
-            tarefas.append(dados)
-            return dados
-        elif metodo == 'PUT':
-            dados = json.loads(request.data)
-            for i in range(len(tarefas)): # faz uma busca sequencial até encontrar o id a ser alterado
-                if tarefas[i]['id'] == dados['id']:
-                    tarefas[i]['status'] = dados['status']
-                    return tarefas[i]
-            return 'id não encontrado'
-        elif metodo == 'DELETE':
-            dados = json.loads(request.data)
-            for i in range(len(tarefas)): # faz uma busca sequencial até encontrar o id a ser deletado
-                if tarefas[i]['id'] == dados['id']:
-                    return tarefas.pop(i)
-            return 'id não encontrado'
+            if metodo == 'POST':
+                for i in range(len(tarefas)):
+                    if tarefas[i]['id'] != i:
+                        dados['id'] = i
+                        tarefas.insert(i,dados)
+                        return dados
+                dados['id'] = len(tarefas)
+                tarefas.append(dados)
+                return dados
+            elif metodo == 'PUT':
+                for i in range(len(tarefas)): # faz uma busca sequencial até encontrar o id a ser alterado
+                    if tarefas[i]['id'] == dados['id']:
+                        tarefas[i]['status'] = dados['status']
+                        return tarefas[i]
+                return 'id não encontrado'
+            elif metodo == 'DELETE':
+                for i in range(len(tarefas)): # faz uma busca sequencial até encontrar o id a ser deletado
+                    if tarefas[i]['id'] == dados['id']:
+                        return tarefas.pop(i)
+                return 'id não encontrado'
     except IndexError:
-        return 'índice não encontrado'
-    except Exception: #o programa não deverá chegar até aqui
-        return 'erro'
+        return 'Erro de índice: índice não encontrado'
+    except Exception as erro: #o programa não deverá chegar até aqui
+        return str(erro)
 
 if __name__ == '__main__':
     app.run()
