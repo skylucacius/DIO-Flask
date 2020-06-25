@@ -1,0 +1,9 @@
+{
+    "python.pythonPath": "c:\\Users\\familia\\Desktop\\TI\\Python\\VS Code - Flask Env\\Scripts\\python.exe",
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.venvPath": "\"C:\\\\Users\\\\familia\\\\Desktop\\\\TI\\\\Python\\\\VS Code - Flask Env\"",
+    "python.autoComplete.extraPaths": [
+    "c:\\Users\\familia\\Desktop\\TI\\Python\\VS Code - Flask Env\\"
+    ],
+    // "python.venvPath": "\"C:\\\\Users\\\\familia\\\\Desktop\\\\TI\\\\Python\\\\VS Code - Flask Env\""
+}

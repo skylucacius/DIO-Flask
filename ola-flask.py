@@ -72,6 +72,8 @@ tarefas = [
     {'id': 3,'responsável': 'Peach', 'tarefas': ['frontend'], 'status': 'ativa'}
 ]
 
+print('hello world')
+
 @app.route('/tarefas', methods=['GET','POST','PUT','DELETE'])
 def tarefa():
     metodo = request.method
