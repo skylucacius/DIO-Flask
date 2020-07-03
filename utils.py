@@ -1,15 +1,13 @@
-from models import Pessoas, Atividades, salvar, session
+from models import Pessoas, Atividades, session
 
 def insere_pessoas(nome,idade):
     pessoa = Pessoas(nome=nome, idade=idade)
-    # pessoa.save()
-    salvar(pessoa)
+    pessoa.salvar()
     print(pessoa)
 
 def insere_atividades(nome,id):
     atividade = Atividades(nome=nome, pessoa_id=id)
-    # atividade.save()
-    salvar(atividade)
+    atividade.salvar()
     print(atividade)
 
 def atualiza_atividades(nome):
@@ -44,15 +42,15 @@ def deleta_pessoas(id):
     except Exception as erro: 
         print('O id {} não foi encontrado.'.format(id))
 
-    # deletar(pessoa)
+    # pessoa.deletar()
 
 if __name__ == "__main__":
-    # insere_pessoas('Galeani',30)
-    # insere_pessoas('Lucas',29)
-    # insere_pessoas('José',20)
-    # insere_atividades('volei',1)
-    # insere_atividades('basquete',1)
-    # insere_atividades('queimada',2)
+    insere_pessoas('Galeani',30)
+    insere_pessoas('Lucas',29)
+    insere_pessoas('José',20)
+    insere_atividades('volei',1)
+    insere_atividades('basquete',1)
+    insere_atividades('queimada',2)
     # atualiza_pessoas(2,'Mario',15)
     # deleta_pessoas(1)
 

@@ -13,7 +13,7 @@
             // para rodar um projeto flask
             // "module": "flask",
             // "env": {
-            //     "FLASK_APP": "models",
+            //     "FLASK_APP": "${file}",
             //     "FLASK_ENV": "development",
             //     "FLASK_DEBUG": "1"
             // },

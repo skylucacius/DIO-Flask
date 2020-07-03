@@ -8,7 +8,7 @@ api = Api(app)
 
 class Home(Resource):
     def get(self):
-        return 'Hello World'
+        return 'Vem pro mundo!'
 
 tarefas = [
     {'id': 0,'responsável': 'Mário', 'tarefas': ['Product Owner'], 'status': 'ativa'},
