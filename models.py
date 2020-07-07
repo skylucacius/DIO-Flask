@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
+from sqlalchemy import create_engine, Column, String, Integer, ForeignKey, Boolean
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -18,8 +18,6 @@ class Metodos():
         session.delete(self)
         session.commit()
             
-
-
 # Uma pessoa pode fazer várias atividades. 1-N
 class Pessoas(base, Metodos):
     __tablename__ = 'pessoas'
@@ -29,24 +27,29 @@ class Pessoas(base, Metodos):
     atividade = relationship('Atividades')
 
     def __repr__(self):
-        return '\n' + 'Pessoa: ' + str(self.id) + self.nome + str(self.idade)
+        return 'Pessoa: ' + str(self.id) + self.nome + str(self.idade)
 
 
 class Atividades(base, Metodos):
     __tablename__ = 'atividades'
     id = Column(Integer, primary_key=True)
     nome = Column(String)
-    pessoa_id = Column(Integer, ForeignKey('pessoas.id'))
+    id_pessoa = Column(Integer, ForeignKey('pessoas.id'))
     pessoa = relationship('Pessoas')
 
-    # pessoa = relationship('Pessoas', back_populates='atividades')
     def __repr__(self):
-        return '\n' + 'Atividade: ' + str(self.id) + self.nome + str(self.pessoa_id)
+        return 'Atividade: ' + str(self.id) + ' Nome: ' + self.nome + ' id da pessoa: ' + str(self.id_pessoa) + ' nome da pessoa: ' + str(self.pessoa.nome)
+        #  + str(self.pessoa.nome)
 
-    # def save(self):
-    #     session.add(self)
-    #     session.commit()
+class Usuarios(base, Metodos):
+    __tablename__ = 'usuarios'
+    id = Column(Integer, primary_key=True)
+    usuario = Column(String)
+    senha = Column(String)
+    ativo = Column(Boolean)
 
+    def __repr__(self):
+        return 'Usuário: ' + self.usuario + ' Senha: ' + self.senha + ' ativo: ' + ('sim' if self.ativo else 'não')
 
 def init_db():
     base.metadata.create_all(engine)

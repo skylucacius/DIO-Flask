@@ -1,9 +1,30 @@
 from flask import Flask, request
 from flask_restful import Api, Resource
-from models import Pessoas, Atividades
+from models import Pessoas, Atividades, Usuarios
+from flask_httpauth import HTTPAuth, HTTPBasicAuth
 
 app = Flask(__name__)
 api = Api(app)
+auth = HTTPBasicAuth()
+
+# usuarios = {
+#     'lucas': 'abcde',
+#     'rafael': '123'
+# }
+# @auth.verify_password
+# def verificaSenha1(usuario,senha):
+#     return usuarios.get(usuario) == senha
+
+@auth.verify_password
+def verificaSenha2(login,password):
+    try:
+        usuario = Usuarios.query.filter_by(usuario=login, senha=password).first()
+        if usuario.ativo:
+            return True
+        else:
+            return False
+    except:
+        return False
 
 def achaPessoa(id):
     return Pessoas.query.filter_by(id=id).first()
@@ -21,10 +42,10 @@ class Pessoa(Resource):
                 return 'O id {} não foi encontrado'.format(id)
 
     # altera as informações de uma pessoa pelo id
+    @auth.login_required
     def put(self,id):
         pessoa = achaPessoa(id)
         dados = request.json
-        # {'nome': 'Mateus', 'idade': 20}
         if 'nome' in dados:
             pessoa.nome = dados['nome']
         if 'idade' in dados:
@@ -33,6 +54,7 @@ class Pessoa(Resource):
         return {'id': pessoa.id, 'nome': pessoa.nome, 'idade': pessoa.idade}
 
     # deleta pessoa pelo id
+    @auth.login_required
     def delete(self,id):
         try:
             pessoa = achaPessoa(id)
@@ -46,6 +68,7 @@ class ListaPessoas(Resource):
     def get(self):
         listaPessoas = Pessoas.query.all()
         return [{'id': i.id, 'nome':i.nome, 'idade':i.idade} for i in listaPessoas]
+    @auth.login_required()
     def post(self):
         dados = request.json
         pessoa = Pessoas(nome=dados['nome'], idade=dados['idade'])
@@ -55,14 +78,9 @@ class ListaPessoas(Resource):
 class Atividade(Resource):
     def get(self):
         listaAtividades = Atividades.query.all()
-        # novaLista = []
-        # for i in listaAtividades:
-            # pessoa = achaPessoa(i.pessoa_id)
-            # novaLista.append({'id': i.id, 'pessoa_nome': pessoa.nome, 'nome': i.nome, 'pessoa_id': i.pessoa_id})
-        # return novaLista
-
         return [{'id': i.id,'nome da atividade': i.nome,'nome da pessoa': i.pessoa.nome} for i in listaAtividades]
     
+    @auth.login_required
     def put(self):
         dados = request.json
         atividade = Atividades.query.filter_by(id=dados['id']).first()
@@ -71,6 +89,7 @@ class Atividade(Resource):
         atividade.salvar()
         return { 'nome': atividade.nome }
         
+    @auth.login_required
     def post(self):
         dados = request.json
         pessoa = achaPessoa(dados['pessoa_id'])

@@ -9,14 +9,14 @@
             "type": "python",
             "request": "launch",
             // para rodar um arquivo python puro
-            "program": "${file}",
+            // "program": "${file}",
             // para rodar um projeto flask
-            // "module": "flask",
-            // "env": {
-            //     "FLASK_APP": "${file}",
-            //     "FLASK_ENV": "development",
-            //     "FLASK_DEBUG": "1"
-            // },
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "${file}",
+                "FLASK_ENV": "development",
+                "FLASK_DEBUG": "1"
+            },
             "args": [
                 "run",
                 "--no-debugger"
